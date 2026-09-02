@@ -39,11 +39,12 @@ Téléchargez puis lancez **[ACoursSur-Setup-x64.exe](https://github.com/janjawi
 
 ### 2. Activer la transcription locale
 
-Dans PowerShell, exécutez ces deux commandes :
+Dans PowerShell, exécutez ces trois commandes :
 
 ```powershell
-Invoke-WebRequest https://github.com/janjawish/a-cours-sur/releases/latest/download/install-whisper.ps1 -OutFile install-whisper.ps1
-powershell -NoProfile -ExecutionPolicy Bypass -File .\install-whisper.ps1
+$script = "$env:TEMP\install-whisper.ps1"
+Invoke-WebRequest "https://github.com/janjawish/a-cours-sur/releases/latest/download/install-whisper.ps1" -OutFile $script
+powershell -NoProfile -ExecutionPolicy Bypass -File $script
 ```
 
 Le script télécharge uniquement la distribution Windows x64 de la [version officielle de whisper.cpp](https://github.com/ggml-org/whisper.cpp/releases/latest), l’installe dans votre dossier utilisateur et configure `WHISPER_CPP_BIN`. Relancez l’application après son exécution.
@@ -150,6 +151,11 @@ Les données de développement et les données personnelles (`*.sqlite`, audio, 
 - traiter les fichiers audio et vidéo existants ;
 - activer `CodexProvider` via un mécanisme officiel OpenAI ;
 - signer les installateurs Windows.
+
+## Dépannage
+
+- **Fenêtre blanche** : installez la dernière version. Depuis `v0.1.1`, l’application utilise le rendu logiciel WARP lorsque WebView2 ne parvient pas à démarrer le processus GPU.
+- **Whisper n’est pas détecté** : relancez l’application après le script, puis ouvrez **Paramètres → Whisper local**. Le chemin d’installation standard est également détecté sans variable d’environnement.
 
 ## Contribuer
 

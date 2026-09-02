@@ -55,6 +55,10 @@ impl AudioSession {
         self.file.sync_all().map_err(|e| e.to_string())?;
         Ok(self.path)
     }
+
+    pub fn duration_ms(&self) -> i64 {
+        i64::from(self.samples_written) * 1_000 / i64::from(SAMPLE_RATE)
+    }
 }
 
 fn write_header(file: &mut File, data_size: u32) -> Result<(), String> {

@@ -1,5 +1,12 @@
 # Historique des versions
 
+## 0.1.1 — 2026-09-02
+
+- corrige la fenêtre blanche provoquée par un plantage GPU de WebView2 avec le rendu WARP ;
+- corrige la fermeture de l’application dans cette situation ;
+- détecte automatiquement Whisper dans le dossier créé par le script d’installation ;
+- améliore la commande PowerShell du README.
+
 ## 0.1.0 — 2026-09-02
 
 Première version publique Windows de **À cours sûr**.

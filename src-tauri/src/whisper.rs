@@ -35,6 +35,16 @@ pub fn find_binary(app_data: &Path) -> Option<PathBuf> {
     if local.is_file() {
         return Some(local);
     }
+    let installed = std::env::var_os("LOCALAPPDATA")
+        .map(PathBuf::from)
+        .map(|root| {
+            root.join("ACoursSur")
+                .join("whisper.cpp")
+                .join("whisper-cli.exe")
+        });
+    if let Some(path) = installed.filter(|path| path.is_file()) {
+        return Some(path);
+    }
     std::env::var_os("WHISPER_CPP_BIN")
         .map(PathBuf::from)
         .filter(|p| p.is_file())

@@ -286,6 +286,34 @@ pub fn run() {
             analyze_course,
             search_courses
         ])
+        .on_window_event(|window, event| {
+            if let tauri::WindowEvent::CloseRequested { api, .. } = event {
+                api.prevent_close();
+
+                if let Some(state) = window.try_state::<AppState>() {
+                    let recording = state
+                        .audio
+                        .lock()
+                        .ok()
+                        .and_then(|mut slot| slot.take());
+
+                    if let Some(session) = recording {
+                        let course_id = session.course_id;
+                        let duration_ms = session.duration_ms();
+                        if let Ok(path) = session.finish() {
+                            if let Ok(database) = state.database.lock() {
+                                let _ = database.execute(
+                                    "UPDATE courses SET status='complete', duration_ms=?1, audio_path=?2 WHERE id=?3",
+                                    params![duration_ms, path.to_string_lossy(), course_id],
+                                );
+                            }
+                        }
+                    }
+                }
+
+            std::process::exit(0);
+            }
+        })
         .run(tauri::generate_context!())
         .expect("erreur pendant l'exécution de l'application");
 }
