@@ -154,7 +154,7 @@ Les données de développement et les données personnelles (`*.sqlite`, audio, 
 
 ## Dépannage
 
-- **Fenêtre blanche** : installez la dernière version. Depuis `v0.1.1`, l’application utilise le rendu logiciel WARP lorsque WebView2 ne parvient pas à démarrer le processus GPU.
+- **Fenêtre blanche** : installez la dernière version. Depuis `v0.1.2`, un mode de compatibilité WebView2 permet au renderer de démarrer sur les configurations Windows qui le bloquent autrement.
 - **Whisper n’est pas détecté** : relancez l’application après le script, puis ouvrez **Paramètres → Whisper local**. Le chemin d’installation standard est également détecté sans variable d’environnement.
 
 ## Contribuer

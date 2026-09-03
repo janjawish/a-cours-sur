@@ -1,5 +1,12 @@
 # Historique des versions
 
+## 0.1.2 — 2026-09-02
+
+- corrige définitivement l’écran blanc sur les machines où Windows bloque le renderer WebView2 ;
+- valide le chargement de l’interface Tauri de production ;
+- valide la fermeture native tout en finalisant l’audio en cours ;
+- conserve la détection automatique de Whisper installé par le script.
+
 ## 0.1.1 — 2026-09-02
 
 - corrige la fenêtre blanche provoquée par un plantage GPU de WebView2 avec le rendu WARP ;
