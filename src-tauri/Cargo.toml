@@ -1,6 +1,6 @@
 [package]
 name = "acourssur"
-version = "0.1.2"
+version = "0.2.0"
 description = "Application locale de prise de notes et transcription de cours"
 authors = ["A cours sur contributors"]
 edition = "2021"

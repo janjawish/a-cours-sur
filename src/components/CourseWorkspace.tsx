@@ -6,10 +6,10 @@ import { addMarker, formatTime, loadCourse, replaceTranscript, saveNote, transcr
 import type { CourseDetail, MarkerKind, WhisperProfile } from "../types";
 
 const markerMeta: Record<MarkerKind, { label: string; shortcut: string; color: string; icon: typeof Tag }> = {
-  important: { label: "Important", shortcut: "Ctrl+1", color: "bg-amber-50 text-amber-800 border-amber-200", icon: Flag },
-  unclear: { label: "Je n'ai pas compris", shortcut: "Ctrl+2", color: "bg-rose-50 text-rose-800 border-rose-200", icon: CircleAlert },
-  review: { label: "À revoir", shortcut: "Ctrl+3", color: "bg-sky-50 text-sky-800 border-sky-200", icon: Bookmark },
-  exam: { label: "Examen", shortcut: "Ctrl+4", color: "bg-violet-50 text-violet-800 border-violet-200", icon: Tag },
+  important: { label: "Important", shortcut: "Ctrl+1", color: "marker-important", icon: Flag },
+  unclear: { label: "Je n'ai pas compris", shortcut: "Ctrl+2", color: "marker-unclear", icon: CircleAlert },
+  review: { label: "À revoir", shortcut: "Ctrl+3", color: "marker-review", icon: Bookmark },
+  exam: { label: "Examen", shortcut: "Ctrl+4", color: "marker-exam", icon: Tag },
 };
 
 type Tab = "course" | "transcript" | "notes" | "review" | "documents";
@@ -118,15 +118,15 @@ export function CourseWorkspace({ courseId, initialTimestamp, onBack }: { course
 
   const elapsed = recorder.recording ? recorder.elapsedMs : detail.course.durationMs;
   return (
-    <div className="flex h-full flex-col bg-white">
-      <header className="border-b border-stone-200 bg-stone-50/90 px-6 pt-3">
+    <div className="flex h-full flex-col bg-[var(--surface)]">
+      <header className="live-header border-b border-[var(--line)] px-6 pt-3">
         <div className="flex items-center justify-between">
           <div className="flex min-w-0 items-center gap-3">
             <button className="icon-button" onClick={onBack} aria-label="Retour"><ArrowLeft size={17} /></button>
-            <div className="min-w-0"><p className="text-[11px] font-medium text-stone-400">{detail.course.subjectName}</p><h1 className="truncate text-[15px] font-semibold">{detail.course.title}</h1></div>
+            <div className="min-w-0"><p className="eyebrow !mb-0 !text-[10px]">{detail.course.subjectName}</p><h1 className="truncate text-[16px] font-extrabold">{detail.course.title}</h1></div>
           </div>
           <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2 rounded-lg border border-stone-200 bg-white px-3 py-2 font-mono text-sm tabular-nums"><span className={`size-2 rounded-full ${recorder.recording ? "animate-pulse bg-red-500" : "bg-stone-300"}`} />{formatTime(elapsed)}</div>
+            <div className="timer-display flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-bold tabular-nums"><span className={`size-2 rounded-full ${recorder.recording ? "animate-pulse bg-[var(--pink)]" : "bg-[var(--ink)]/25"}`} />{formatTime(elapsed)}</div>
             {!recorder.recording ? <button className="record-button" onClick={() => void recorder.start()}><span className="size-2 rounded-full bg-white" /> Enregistrer</button> : <button className="stop-button" onClick={() => void stopAndTranscribe()}><Square size={13} fill="currentColor" /> Terminer</button>}
           </div>
         </div>
@@ -139,14 +139,14 @@ export function CourseWorkspace({ courseId, initialTimestamp, onBack }: { course
 
       {tab === "course" && (
         <div className="grid min-h-0 flex-1 grid-cols-[minmax(0,1.1fr)_minmax(360px,0.9fr)]">
-          <section className="min-h-0 overflow-y-auto border-r border-stone-200 px-7 py-6">
-            <div className="mb-5 flex items-center justify-between"><div><h2 className="text-sm font-semibold">Transcript</h2><p className="mt-0.5 text-xs text-stone-400">Synchronisé avec l'audio</p></div>{transcribing && <span className="text-xs text-stone-500">Whisper travaille…</span>}</div>
-            {detail.transcript.length === 0 ? <div className="rounded-lg border border-dashed border-stone-200 py-16 text-center text-sm text-stone-400">Le transcript apparaîtra ici au fil du cours.</div> : <div className="space-y-1">{detail.transcript.map((segment) => <button key={segment.id} className="transcript-line" onClick={() => { if (audioRef.current) audioRef.current.currentTime = segment.startMs / 1000; }}><span>{formatTime(segment.startMs)}</span><p>{segment.text}</p></button>)}</div>}
+          <section className="reading-surface min-h-0 overflow-y-auto border-r border-[var(--line)] px-7 py-6">
+            <div className="mb-5 flex items-center justify-between"><div><p className="eyebrow !mb-1">Le prof dit</p><h2 className="text-lg font-extrabold">Transcript en direct</h2><p className="mt-0.5 text-xs text-[var(--muted)]">Chaque ligne revient au bon moment dans l'audio.</p></div>{transcribing && <span className="rounded-full bg-[var(--aqua)] px-3 py-1 text-xs font-bold">Whisper travaille…</span>}</div>
+            {detail.transcript.length === 0 ? <div className="rounded-xl border-2 border-dashed border-[var(--line)] py-16 text-center"><p className="font-bold text-[var(--ink)]">À l'écoute…</p><p className="mt-1 text-sm text-[var(--muted)]">Le transcript apparaîtra ici au fil du cours.</p></div> : <div className="space-y-1">{detail.transcript.map((segment) => <button key={segment.id} className="transcript-line" onClick={() => { if (audioRef.current) audioRef.current.currentTime = segment.startMs / 1000; }}><span>{formatTime(segment.startMs)}</span><p>{segment.text}</p></button>)}</div>}
           </section>
-          <section className="flex min-h-0 flex-col bg-[#fcfbf8] px-7 py-6">
-            <div className="mb-4 flex items-center justify-between"><div><h2 className="text-sm font-semibold">Mes notes</h2><p className="mt-0.5 text-xs text-stone-400">Enregistrement automatique</p></div><span className="text-[11px] text-stone-400">{note.length} caractères</span></div>
-            <textarea className="min-h-0 flex-1 resize-none bg-transparent text-[15px] leading-7 outline-none placeholder:text-stone-300" value={note} onChange={(e) => setNote(e.target.value)} placeholder="Notez ici les explications, exemples et questions importantes…" />
-            <div className="mt-4 border-t border-stone-200 pt-4"><p className="mb-3 text-[11px] font-medium uppercase tracking-[0.12em] text-stone-400">Ajouter un marqueur</p><div className="grid grid-cols-2 gap-2">{(Object.keys(markerMeta) as MarkerKind[]).map((kind) => { const meta = markerMeta[kind]; const Icon = meta.icon; return <button key={kind} className={`flex items-center gap-2 rounded-md border px-2.5 py-2 text-left text-xs ${meta.color}`} onClick={() => void mark(kind)}><Icon size={14} /><span className="flex-1">{meta.label}</span><kbd className="opacity-50">{meta.shortcut.replace("Ctrl+", "^")}</kbd></button>; })}</div></div>
+          <section className="notes-surface flex min-h-0 flex-col px-7 py-6">
+            <div className="mb-4 flex items-center justify-between"><div><p className="eyebrow !mb-1">Moi, je note</p><h2 className="text-lg font-extrabold">Mes notes</h2><p className="mt-0.5 text-xs text-[var(--muted)]">Enregistrées automatiquement.</p></div><span className="text-[11px] text-[var(--muted)]">{note.length} caractères</span></div>
+            <textarea className="min-h-0 flex-1 resize-none bg-transparent text-[15px] leading-7 text-[#353148] outline-none placeholder:text-[#9d98aa]" value={note} onChange={(e) => setNote(e.target.value)} placeholder="Note les explications, exemples et questions importantes…" />
+            <div className="mt-4 border-t border-[var(--line)] pt-4"><p className="mb-3 text-[10px] font-extrabold uppercase tracking-[0.14em] text-[var(--muted)]">Marquer ce moment</p><div className="grid grid-cols-2 gap-2">{(Object.keys(markerMeta) as MarkerKind[]).map((kind) => { const meta = markerMeta[kind]; const Icon = meta.icon; return <button key={kind} className={`marker-button ${meta.color}`} onClick={() => void mark(kind)}><Icon size={14} /><span className="flex-1">{meta.label}</span><kbd className="opacity-55">{meta.shortcut.replace("Ctrl+", "^")}</kbd></button>; })}</div></div>
           </section>
         </div>
       )}
@@ -156,7 +156,7 @@ export function CourseWorkspace({ courseId, initialTimestamp, onBack }: { course
       {tab === "review" && <ReviewPanel detail={detail} />}
       {tab === "documents" && <section className="grid h-full place-items-center"><div className="text-center"><h2 className="font-semibold">Documents associés</h2><p className="mt-2 max-w-sm text-sm leading-6 text-stone-500">L'import PDF, PPTX, audio et vidéo utilisera le même pipeline local. Le schéma de stockage est déjà prêt.</p><button className="secondary-button mt-5" disabled>Importer bientôt</button></div></section>}
 
-      <footer className="flex h-16 shrink-0 items-center gap-4 border-t border-stone-200 bg-white px-6">
+      <footer className="flex h-16 shrink-0 items-center gap-4 border-t border-[var(--line)] bg-white px-6">
         <button className="icon-button" disabled={!audioUrl} onClick={() => void audioRef.current?.play()}>{audioRef.current?.paused === false ? <Pause size={16} /> : <Play size={16} />}</button>
         <audio ref={audioRef} src={audioUrl} controls className="h-9 flex-1" />
         <div className="flex items-center gap-1">{[...Array(18)].map((_, index) => <span key={index} className="w-0.5 rounded-full bg-stone-300 transition-all" style={{ height: `${6 + ((index * 7) % 15) * (recorder.recording ? Math.max(.3, recorder.level) : .55)}px` }} />)}</div>

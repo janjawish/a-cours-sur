@@ -6,7 +6,7 @@
 
 <p align="center">
   Enregistrez. Notez. Révisez.<br>
-  Une application Windows locale et sobre, pensée pour les étudiants.
+  Une application Windows locale, expressive et pensée pour les étudiants.
 </p>
 
 <p align="center">
@@ -26,6 +26,12 @@
 </p>
 
 ![Vue d’ensemble de l’application](docs/app-overview.png)
+
+> **Nouveau dans la v0.2.0 — l’interface a été entièrement refaite.** Nouvelle identité visuelle, navigation plus lisible et écran de cours en direct repensé pour rester confortable pendant une longue session.
+
+<p align="center">
+  <img src="docs/live-course.png" alt="Cours en direct avec transcript, notes et marqueurs" width="100%">
+</p>
 
 À cours sûr réunit l’audio, vos notes, le transcript et vos révisions dans un même cours. L’audio et la transcription restent sur votre ordinateur. Gemini est facultatif et n’intervient qu’après le cours.
 
@@ -86,6 +92,12 @@ Une erreur de Whisper ou d’IA n’arrête jamais l’enregistrement. Sans IA, 
 - analyses structurées via Gemini avec votre propre clé ;
 - séparation claire entre les propos explicites du professeur et les suggestions de l’IA ;
 - fonctionnement hors ligne pour toutes les fonctions essentielles.
+
+### Une interface qui ne ressemble pas à une app IA
+
+La v0.2.0 introduit une identité visuelle propre à ÀCoursSûr : bleu électrique, jaune surligneur, typographie signalétique et marqueurs colorés. Les zones de lecture restent volontairement calmes et très contrastées. L’IA reste à l’arrière-plan, sans chatbot central, gradients SaaS ou éléments décoratifs gênants.
+
+Les choix visuels et composants sont documentés dans [le design system](docs/DESIGN_SYSTEM.md).
 
 Le contrat `AIProvider` comprend `GeminiProvider` et `CodexProvider`. Gemini est fonctionnel. Codex est volontairement laissé désactivé tant qu’une intégration officielle, minimale et correctement isolée n’est pas finalisée : aucune récupération manuelle de jeton ChatGPT ou Codex n’est effectuée.
 

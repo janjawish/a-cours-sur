@@ -1,7 +1,7 @@
 {
   "name": "a-cours-sur",
   "private": true,
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Application Windows locale pour enregistrer, transcrire et réviser ses cours.",
   "license": "MIT",
   "repository": {

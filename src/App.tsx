@@ -5,6 +5,7 @@ import { CoursesView } from "./components/CoursesView";
 import { ReviewView } from "./components/ReviewView";
 import { SearchView } from "./components/SearchView";
 import { SettingsView } from "./components/SettingsView";
+import { BrandMark } from "./components/Brand";
 import { createCourse, createSubject, loadLibrary } from "./lib/api";
 import type { LibraryData, View } from "./types";
 
@@ -56,15 +57,12 @@ function App() {
   };
 
   return (
-    <div className="h-screen overflow-hidden bg-stone-50 text-stone-900 selection:bg-amber-100">
-      <div className="grid h-full grid-cols-[228px_minmax(0,1fr)]">
-        <aside className="flex h-full flex-col border-r border-stone-200 bg-[#f4f3ef] px-3 py-4">
-          <div className="mb-7 flex items-center gap-2.5 px-2">
-            <div className="grid size-8 place-items-center rounded-lg bg-stone-900 text-sm font-semibold text-white">A</div>
-            <div>
-              <p className="text-[15px] font-semibold tracking-tight">À cours sûr</p>
-              <p className="text-[11px] text-stone-500">Bureau d'étude local</p>
-            </div>
+    <div className="h-screen overflow-hidden bg-[var(--paper)] text-[var(--ink)] selection:bg-[var(--yellow)]">
+      <div className="grid h-full grid-cols-[236px_minmax(0,1fr)]">
+        <aside className="brand-sidebar flex h-full flex-col px-3 py-5">
+          <div className="mb-8 px-2">
+            <BrandMark />
+            <p className="mt-4 text-[11px] font-medium text-white/60">Ton bureau d'étude local.</p>
           </div>
 
           <nav className="space-y-1" aria-label="Navigation principale">
@@ -81,17 +79,17 @@ function App() {
           </nav>
 
           <div className="mt-7 min-h-0 flex-1 overflow-y-auto px-2">
-            <p className="mb-2 text-[11px] font-medium uppercase tracking-[0.12em] text-stone-400">Matières</p>
+            <p className="mb-2 text-[10px] font-extrabold uppercase tracking-[0.16em] text-white/45">Matières</p>
             {library.subjects.map((subject) => (
-              <button key={subject.id} className="flex w-full items-center gap-2 rounded-md px-1 py-1.5 text-left text-[13px] text-stone-600 hover:text-stone-950" onClick={() => { setView("courses"); setActiveCourseId(undefined); }}>
-                <span className="size-2 rounded-full" style={{ backgroundColor: subject.color }} />
+              <button key={subject.id} className="flex w-full items-center gap-2 rounded-lg px-1 py-1.5 text-left text-[13px] text-white/70 transition hover:text-white" onClick={() => { setView("courses"); setActiveCourseId(undefined); }}>
+                <span className="sidebar-dot size-2 rounded-full" />
                 <span className="truncate">{subject.name}</span>
               </button>
             ))}
           </div>
 
-          <div className="rounded-lg border border-stone-200 bg-white/65 p-3 text-xs leading-relaxed text-stone-500">
-            <div className="mb-1 flex items-center gap-1.5 font-medium text-stone-700"><span className="size-1.5 rounded-full bg-emerald-600" />Données locales</div>
+          <div className="rounded-xl border border-white/20 bg-white/10 p-3 text-xs leading-relaxed text-white/60">
+            <div className="mb-1 flex items-center gap-1.5 font-bold text-white"><span className="size-1.5 rounded-full bg-[var(--yellow)]" />100 % local</div>
             Audio, notes et recherche restent sur cet ordinateur.
           </div>
         </aside>
